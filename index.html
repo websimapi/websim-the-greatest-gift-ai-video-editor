@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Greatest Gift - AI Video Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>The Greatest Gift</h1>
+            <p>AI-Powered Video Editor</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Recording Controls -->
+            <section class="recording-panel">
+                <h2>Screen Recording</h2>
+                <div class="recording-controls">
+                    <button id="startRecording" class="btn primary">
+                        <span class="icon">🎥</span>
+                        Start Recording
+                    </button>
+                    <button id="stopRecording" class="btn secondary" disabled>
+                        <span class="icon">⏹️</span>
+                        Stop Recording
+                    </button>
+                    <label class="audio-toggle">
+                        <input type="checkbox" id="includeAudio" checked>
+                        Include Audio
+                    </label>
+                </div>
+                <div class="recording-status" id="recordingStatus"></div>
+            </section>
+
+            <!-- Video Preview -->
+            <section class="preview-panel">
+                <h2>Preview</h2>
+                <div class="video-container">
+                    <video id="videoPreview" controls></video>
+                    <div class="preview-overlay">
+                        <div class="playhead" id="playhead"></div>
+                    </div>
+                </div>
+                <div class="preview-controls">
+                    <button id="playPause" class="btn">⏯️</button>
+                    <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+                </div>
+            </section>
+
+            <!-- Timeline Editor -->
+            <section class="timeline-panel">
+                <h2>Timeline</h2>
+                <div class="timeline-controls">
+                    <button id="addTrack" class="btn">+ Add Track</button>
+                    <button id="cutTool" class="btn tool">✂️ Cut</button>
+                    <button id="splitTool" class="btn tool">📏 Split</button>
+                    <button id="deleteTool" class="btn tool">🗑️ Delete</button>
+                </div>
+                <div class="timeline-container" id="timelineContainer">
+                    <div class="timeline-header">
+                        <div class="time-ruler" id="timeRuler"></div>
+                    </div>
+                    <div class="timeline-tracks" id="timelineTracks">
+                        <!-- Tracks will be added dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Features -->
+            <section class="ai-panel">
+                <h2>AI Features</h2>
+                <div class="ai-controls">
+                    <div class="tts-section">
+                        <h3>Text to Speech</h3>
+                        <textarea id="ttsText" placeholder="Enter text to convert to speech..."></textarea>
+                        <select id="ttsVoice">
+                            <option value="en-male">English Male</option>
+                            <option value="en-female">English Female</option>
+                            <option value="es-male">Spanish Male</option>
+                            <option value="fr-female">French Female</option>
+                        </select>
+                        <button id="generateTTS" class="btn primary">Generate Audio</button>
+                    </div>
+                    
+                    <div class="frame-analysis-section">
+                        <h3>Frame Analysis</h3>
+                        <button id="analyzeFrame" class="btn">🔍 Analyze Current Frame</button>
+                        <textarea id="analysisPrompt" placeholder="Describe what you want to add to this frame..."></textarea>
+                        <button id="enhanceFrame" class="btn primary">Enhance Frame</button>
+                        <div id="analysisResult" class="analysis-result"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Export -->
+            <section class="export-panel">
+                <h2>Export</h2>
+                <div class="export-controls">
+                    <select id="exportQuality">
+                        <option value="720p">720p HD</option>
+                        <option value="1080p">1080p Full HD</option>
+                        <option value="4K">4K Ultra HD</option>
+                    </select>
+                    <button id="exportVideo" class="btn primary">
+                        <span class="icon">📤</span>
+                        Export Video
+                    </button>
+                </div>
+                <div class="export-progress" id="exportProgress"></div>
+            </section>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
+
