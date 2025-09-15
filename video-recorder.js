@@ -66,14 +66,22 @@ class VideoRecorder {
             this.mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0) {
                     this.recordedChunks.push(event.data);
+                    console.log('Data chunk received:', event.data.size, 'bytes');
                 }
             };
 
             this.mediaRecorder.onstop = () => {
+                console.log('MediaRecorder stopped, creating blob from', this.recordedChunks.length, 'chunks');
                 const blob = new Blob(this.recordedChunks, {
                     type: 'video/webm'
                 });
                 this.emit('recordingStopped', blob);
+                this.cleanup();
+            };
+
+            this.mediaRecorder.onerror = (event) => {
+                console.error('MediaRecorder error:', event.error);
+                this.emit('recordingError', event.error);
                 this.cleanup();
             };
 
@@ -93,7 +101,20 @@ class VideoRecorder {
 
     stopRecording() {
         if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+            console.log('Stopping recording, state:', this.mediaRecorder.state);
             this.mediaRecorder.stop();
+            
+            // Add timeout fallback in case stop event doesn't fire
+            setTimeout(() => {
+                if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+                    console.warn('MediaRecorder stop timeout, forcing cleanup');
+                    this.emit('recordingStopped', new Blob(this.recordedChunks, { type: 'video/webm' }));
+                    this.cleanup();
+                }
+            }, 5000);
+        } else {
+            console.warn('MediaRecorder not active, cannot stop');
+            this.emit('recordingStopped', new Blob([], { type: 'video/webm' }));
         }
     }
 
@@ -107,4 +128,3 @@ class VideoRecorder {
 }
 
 export default VideoRecorder;
-

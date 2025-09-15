@@ -78,10 +78,20 @@ class VideoEditorApp {
         this.recorder.on('recordingStopped', (videoBlob) => {
             document.getElementById('startRecording').disabled = false;
             document.getElementById('stopRecording').disabled = true;
-            document.getElementById('recordingStatus').textContent = 'Recording complete';
             
-            // Add video to timeline
-            this.editor.addVideoClip(videoBlob);
+            if (videoBlob.size > 0) {
+                document.getElementById('recordingStatus').textContent = 'Recording complete';
+                // Add video to timeline
+                this.editor.addVideoClip(videoBlob);
+            } else {
+                document.getElementById('recordingStatus').textContent = 'Recording failed - no data captured';
+            }
+        });
+
+        this.recorder.on('recordingError', (error) => {
+            document.getElementById('startRecording').disabled = false;
+            document.getElementById('stopRecording').disabled = true;
+            document.getElementById('recordingStatus').textContent = `Recording error: ${error.message}`;
         });
 
         // Listen for editor events
@@ -211,4 +221,3 @@ class VideoEditorApp {
 document.addEventListener('DOMContentLoaded', () => {
     new VideoEditorApp();
 });
-
