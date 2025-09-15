@@ -86,9 +86,11 @@ class VideoRecorder {
             };
 
             // Handle stream ending (user stops sharing)
-            displayStream.getVideoTracks()[0].onended = () => {
-                this.stopRecording();
-            };
+            this.stream.getTracks().forEach(track => {
+                track.onended = () => {
+                    this.stopRecording();
+                };
+            });
 
             this.mediaRecorder.start(1000); // Collect data every second
             this.emit('recordingStarted');
@@ -100,21 +102,24 @@ class VideoRecorder {
     }
 
     stopRecording() {
-        if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-            console.log('Stopping recording, state:', this.mediaRecorder.state);
+        if (!this.stream) {
+            console.warn('No active stream to stop.');
+            return;
+        }
+
+        console.log('Stopping recording...');
+
+        // Stop all tracks on the stream. This will trigger the recorder's onstop event.
+        this.stream.getTracks().forEach(track => {
+            if (track.readyState === 'live') {
+                track.stop();
+            }
+        });
+        
+        // If the recorder is still in a recording state, explicitly stop it.
+        // This can help in some edge cases.
+        if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.stop();
-            
-            // Add timeout fallback in case stop event doesn't fire
-            setTimeout(() => {
-                if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-                    console.warn('MediaRecorder stop timeout, forcing cleanup');
-                    this.emit('recordingStopped', new Blob(this.recordedChunks, { type: 'video/webm' }));
-                    this.cleanup();
-                }
-            }, 5000);
-        } else {
-            console.warn('MediaRecorder not active, cannot stop');
-            this.emit('recordingStopped', new Blob([], { type: 'video/webm' }));
         }
     }
 
